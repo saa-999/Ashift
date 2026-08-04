@@ -96,17 +96,27 @@ make clean
 
 # Download
 
-#### Fast Download 
+#### Command Download 
 
 **Linux & Mac**
 
 * Run the following command to download and install `Ashift` globally:
-  `sudo curl -L -o /usr/local/bin/Ashift https://github.com/saa-999/-Ashift/releases/download/v1.0.0/Ashift && sudo chmod +x /usr/local/bin/Ashift`
+  `sudo curl -L -o /usr/local/bin/Ashift https://github.com/saa-999/Ashift/releases/download/v1.0.0/Ashift && sudo chmod +x /usr/local/bin/Ashift`
 
 **Windows (PowerShell):**
 
 * Assuming you have a `C:\Tools` directory added to your System PATH:
-`Invoke-WebRequest -Uri "https://github.com/saa-999/-Ashift/releases/download/v1.0.0/Ashift.exe" -OutFile "C:\Tools\Ashift.exe"`
+`Invoke-WebRequest -Uri "https://github.com/saa-999/Ashift/releases/download/v1.0.0/Ashift.exe" -OutFile "C:\Tools\Ashift.exe"`
+* The tool will not work just anywhere in the Windows command line; you must execute the command within the environment variable:
+`[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Tools", "User")`
+
+**Note: Modifying the System PATH is left optional to respect the user's custom environment configurations.**
+
+*NOTE: If you have done all this and it still doesn't work, close the terminal and restart it.*
+
+### Manual Download 
+**You can click on the "Tag" icon, select the latest version of the tool, and then choose the option corresponding to your operating system**
+***You can manually download the latest binaries directly from the [Releases Page](https://github.com/saa-999/Ashift/releases).***
 ## About tool
 
 * Some might consider the idea naive, but I designed this tool to serve my own specific needs. I decided to share it because someone else might be looking for the exact same thing. If the tool doesn't appeal to you, feel free to modify it—or just throw it in the trash(:
