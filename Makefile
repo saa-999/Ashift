@@ -1,10 +1,10 @@
 CC = gcc
 CFLAGS = -O3 -march=native -flto -fomit-frame-pointer -std=c11 -Wall -Wextra
-TARGET = coreshift
+TARGET = shift
 
 WIN_CC = x86_64-w64-mingw32-gcc
 WIN_CFLAGS = -O3 -flto -fomit-frame-pointer -std=c11 -Wall -Wextra
-WIN_TARGET = coreshift.exe
+WIN_TARGET = shift.exe
 
 SRCS = main.c shift.c
 OBJS = $(SRCS:.c=.o)
