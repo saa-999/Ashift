@@ -6,19 +6,19 @@
 
 ```
 # this command does a shift 
-shift ">> 24 u32 19216451"
+Ashift ">> 24 u32 19216451"
 ```
 * NOTE: Always enclose the operation and arguments in quotes (" ") to prevent the shell from intercepting operators like >> or <<.
 
 ```
 # XOR command
-shift "-x 0xFF u32 15461291"
+Ashift "-x 0xFF u32 15461291"
 
 # OR command
-shift "-o 0xFF u32 15461291"
+Ashift "-o 0xFF u32 15461291"
 
 # AND command
-shift "-n 0xFF u32 15461291"
+Ashift "-n 0xFF u32 15461291"
 
 ```
 
@@ -28,14 +28,14 @@ shift "-n 0xFF u32 15461291"
 
 * e.g.
 ```
-shift ">> 24 u32 19216451"
+Ashift ">> 24 u32 19216451"
 # u32 means a 32-bit unsigned variable
 
-shift "-n 0xFF i16 19216451"
+Ashift "-n 0xFF i16 19216451"
 ```
 *If you want to know more about how to use it, use a command 
 ```
-shift -h 
+Ashift -h 
 
 ```
 
