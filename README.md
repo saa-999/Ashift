@@ -101,12 +101,12 @@ make clean
 **Linux & Mac**
 
 * Run the following command to download and install `Ashift` globally:
-  `sudo curl -L -o /usr/local/bin/Ashift https://github.com/saa-999/Ashift/releases/download/v1.0.0/Ashift && sudo chmod +x /usr/local/bin/Ashift`
+  `sudo curl -L -o /usr/local/bin/Ashift https://github.com/saa-999/-Ashift/releases/download/v1.0.0/Ashift && sudo chmod +x /usr/local/bin/Ashift`
 
 **Windows (PowerShell):**
 
 * Assuming you have a `C:\Tools` directory added to your System PATH:
-`Invoke-WebRequest -Uri "https://github.com/saa-999/Ashift/releases/download/v1.0.0/Ashift.exe" -OutFile "C:\Tools\Ashift.exe"`
+`Invoke-WebRequest -Uri "https://github.com/saa-999/-Ashift/releases/download/v1.0.0/Ashift.exe" -OutFile "C:\Tools\Ashift.exe"`
 ## About tool
 
 * Some might consider the idea naive, but I designed this tool to serve my own specific needs. I decided to share it because someone else might be looking for the exact same thing. If the tool doesn't appeal to you, feel free to modify it—or just throw it in the trash(:
