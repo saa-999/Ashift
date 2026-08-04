@@ -79,6 +79,22 @@ Examples:
 ======================================================
 ```
 
+## Makefile
+* To build the tool
+```
+make
+
+# windows
+
+make windows
+
+# clean
+make clean
+
+# I know it's very basic :)
+```
+
+
 ## About tool
 
 * Some might consider the idea naive, but I designed this tool to serve my own specific needs. I decided to share it because someone else might be looking for the exact same thing. If the tool doesn't appeal to you, feel free to modify it—or just throw it in the trash(:
