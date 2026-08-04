@@ -24,7 +24,7 @@ shift "-n 0xFF u32 15461291"
 
 # Type of variable
 
-*** Variables starting with 'u' are unsigned (positive only), and variables starting with 'i' are signed (can be positive or negative). ***
+* Variables starting with 'u' are unsigned (positive only), and variables starting with 'i' are signed (can be positive or negative). 
 
 *e.g.
 ```
@@ -33,14 +33,14 @@ shift ">> 24 u32 19216451"
 
 shift "-n 0xFF i16 19216451"
 ```
-**If you want to know more about how to use it, use a command 
+*If you want to know more about how to use it, use a command 
 ```
 shift -h 
 
 ```
 
 ## Tool interface
-** The natural interface for using commands
+* The natural interface for using commands
 ```
 
 [ Instruction 1 ]
@@ -87,4 +87,4 @@ Examples:
 
 *I used AI to speed up the tool's development after all, who wants to spend a busy day building a tool like this from scratch? However, I reviewed the code myself, and AI wrote 40% of it. My apologies to the LLM haters.
 
-*** I am not competing with other tools like qalc or bc; in fact, I rely on them myself. I designed shift to be faster and easier to use for repetitive tasks. While it is true that the Python interpreter performs the same function as my tool, consider the effort involved if you were to keep typing out commands like python -c "print(bin(192 << 24))". It is a somewhat slow process. ***
+* I am not competing with other tools like qalc or bc; in fact, I rely on them myself. I designed shift to be faster and easier to use for repetitive tasks. While it is true that the Python interpreter performs the same function as my tool, consider the effort involved if you were to keep typing out commands like python -c "print(bin(192 << 24))". It is a somewhat slow process. 
