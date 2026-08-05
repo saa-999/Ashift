@@ -25,6 +25,7 @@
 #define SHIFT_OP_AND    0x03
 #define SHIFT_OP_OR     0x04
 #define SHIFT_OP_XOR    0x05
+#define SHIFT_OP_NOT    0x06
 
 #define SHIFT_TYPE_U8    8
 #define SHIFT_TYPE_U16   16

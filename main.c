@@ -80,12 +80,14 @@ static void print_help() {
     print_str("  >>            Right Shift\n");
     print_str("  -n            Bitwise AND\n");
     print_str("  -o            Bitwise OR\n");
-    print_str("  -x            Bitwise XOR\n\n");
+    print_str("  -x            Bitwise XOR\n");
+    print_str("  ~             Bitwise NOT\n\n");
     print_str("Data Types:\n");
     print_str("  u8, i8, u16, i16, u32, i32\n\n");
     print_str("Examples:\n");
     print_str("  shift \"<< 2 u32 100\"   Left shift 100 by 2 as a u32.\n");
     print_str("  shift \">> 3 i8 100\"    Right shift 100 by 3 as an i8.\n");
+    print_str("  shift \"~ u32 (10+20)\"  Compound expressions and bitwise NOT.\n");
     print_str("======================================================\n\n");
 }
 
@@ -169,13 +171,13 @@ int main(int argc, char *argv[]) {
             print_str("Target Arg  : "); print_u32(current->op_arg); print_str("\n");
             print_str("Base Block  : "); print_binary_blocks(raw_val, data_type);
             
-            if (LIKELY(opcode == SHIFT_OP_LSHIFT || opcode == SHIFT_OP_RSHIFT)) {
+            if (LIKELY(opcode != SHIFT_OP_NONE)) {
                 uint32_t shifted_val = 0;
                 
-                if (LIKELY(opcode == SHIFT_OP_LSHIFT)) {
+                if (opcode == SHIFT_OP_LSHIFT) {
                     print_str("Direction   : Left (<<)\n");
                     shifted_val = raw_val << current->op_arg;
-                } else {
+                } else if (opcode == SHIFT_OP_RSHIFT) {
                     print_str("Direction   : Right (>>)\n");
                     switch (data_type) {
                         case SHIFT_TYPE_I8:  shifted_val = (uint8_t)((int8_t)raw_val >> current->op_arg); break;
@@ -186,6 +188,18 @@ int main(int argc, char *argv[]) {
                         case SHIFT_TYPE_U32: shifted_val = (uint32_t)raw_val >> current->op_arg; break;
                         default: shifted_val = raw_val >> current->op_arg; break;
                     }
+                } else if (opcode == SHIFT_OP_NOT) {
+                    print_str("Direction   : NOT (~)\n");
+                    shifted_val = ~raw_val;
+                } else if (opcode == SHIFT_OP_AND) {
+                    print_str("Direction   : AND (&)\n");
+                    shifted_val = raw_val & current->op_arg;
+                } else if (opcode == SHIFT_OP_OR) {
+                    print_str("Direction   : OR (|)\n");
+                    shifted_val = raw_val | current->op_arg;
+                } else if (opcode == SHIFT_OP_XOR) {
+                    print_str("Direction   : XOR (^)\n");
+                    shifted_val = raw_val ^ current->op_arg;
                 }
                 
                 uint8_t bits = (data_type < 0) ? -data_type : data_type;
