@@ -20,6 +20,15 @@ Ashift "-o 0xFF u32 15461291"
 # AND command
 Ashift "-n 0xFF u32 15461291"
 
+# Bitwise NOT
+Ashift "-~ 0xFF u32 15461291 "
+
+```
+* **Compound Expressions (v1.1.0+)**: You can now evaluate complex mathematical and bitwise equations directly. 
+
+```bash
+# Example: Forward Memory Alignment
+Ashift " i32 ((4094 + 16 - 1) & ~(16 - 1))"
 ```
 
 # Type of variable
@@ -59,6 +68,7 @@ Result Block: [ 00000000 ] [ 00000000 ] [ 00000000 ] [ 00000000 ]
 ```
 * help interface
 ```
+Usage: shift "[op] <type> <value>"
 
 Options:
   -h, --help    Show this highly optimized help screen.
@@ -69,6 +79,7 @@ Operations:
   -n            Bitwise AND
   -o            Bitwise OR
   -x            Bitwise XOR
+  ~             Bitwise NOT
 
 Data Types:
   u8, i8, u16, i16, u32, i32
@@ -76,7 +87,9 @@ Data Types:
 Examples:
   shift "<< 2 u32 100"   Left shift 100 by 2 as a u32.
   shift ">> 3 i8 100"    Right shift 100 by 3 as an i8.
+  shift "~ u32 (10+20)"  Compound expressions and bitwise NOT.
 ======================================================
+
 ```
 
 ## Makefile
@@ -117,6 +130,7 @@ make clean
 ### Manual Download 
 **You can click on the "Tag" icon, select the latest version of the tool, and then choose the option corresponding to your operating system**
 ***You can manually download the latest binaries directly from the [Releases Page](https://github.com/saa-999/Ashift/releases).***
+
 ## About tool
 
 * Some might consider the idea naive, but I designed this tool to serve my own specific needs. I decided to share it because someone else might be looking for the exact same thing. If the tool doesn't appeal to you, feel free to modify it—or just throw it in the trash(:
