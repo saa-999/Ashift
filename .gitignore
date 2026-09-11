@@ -1,0 +1,8 @@
+*.o
+Ashift
+Ashift.exe
+*.dSYM/
+.DS_Store
+*.swp
+*.swo
+*~
