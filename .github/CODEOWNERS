@@ -1,0 +1,4 @@
+# Source code — only the maintainer
+*.c @saa-999
+*.h @saa-999
+Makefile @saa-999
