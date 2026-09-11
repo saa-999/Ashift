@@ -1,144 +1,108 @@
-### Ashift tool 
-* I designed this tool to help me with writing code.
-* You can easily perform any operation you want—such as OR, XOR, AND, >>, or <<—on numbers or bits.
+# Ashift
 
-## Usage 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Release](https://img.shields.io/github/v/release/saa-999/Ashift)](https://github.com/saa-999/Ashift/releases)
 
-```
-# this command does a shift 
-Ashift ">> 24 u32 19216451"
-```
-* NOTE: Always enclose the operation and arguments in quotes (" ") to prevent the shell from intercepting operators like >> or <<.
+A fast CLI tool for performing bitwise operations, shifts, and mathematical expressions on typed integers.
 
-```
-# XOR command
-Ashift "-x 0xFF u32 15461291"
+## Table of Contents
+- [Background](#background)
+- [Install](#install)
+- [Usage](#usage)
+- [Data Types](#data-types)
+- [Contributing](#contributing)
+- [License](#license)
 
-# OR command
-Ashift "-o 0xFF u32 15461291"
+## Background
 
-# AND command
-Ashift "-n 0xFF u32 15461291"
+I built Ashift for my own workflow because I needed a fast way to handle repetitive bitwise operations and shifts while visualizing the binary blocks. It is not designed to replace general-purpose calculators like `qalc` or `bc`, but rather to be a quick, focused tool for typed integer math. About 40% of the code was generated with AI assistance. It does exactly what I need, and I'm sharing it in case others find it useful.
 
-# Bitwise NOT
-Ashift "-~ 0xFF u32 15461291 "
+## Install
 
-```
-* **Compound Expressions (v1.1.0+)**: You can now evaluate complex mathematical and bitwise equations directly. 
+### Download Pre-compiled Binaries (v1.1.0)
 
+**Linux & macOS:**
 ```bash
-# Example: Forward Memory Alignment
-Ashift " i32 ((4094 + 16 - 1) & ~(16 - 1))"
+sudo curl -L -o /usr/local/bin/Ashift https://github.com/saa-999/Ashift/releases/download/v1.1.0/Ashift
+sudo chmod +x /usr/local/bin/Ashift
 ```
-
-# Type of variable
-
-* Variables starting with 'u' are unsigned (positive only), and variables starting with 'i' are signed (can be positive or negative). 
-
-* e.g.
-```
-Ashift ">> 24 u32 19216451"
-# u32 means a 32-bit unsigned variable
-
-Ashift "-n 0xFF i16 19216451"
-```
-*If you want to know more about how to use it, use a command 
-```
-Ashift -h 
-
-```
-
-## Tool interface
-* The natural interface for using commands
-```
-
-[ Instruction 1 ]
-Data Type   : u32
-Mode        : [ OPERATION DETECTED: 2 ]
-Value (Raw) : 15461291
-Target Arg  : 255
-Base Block  : [ 00000000 ] [ 11101011 ] [ 11101011 ] [ 10101011 ]
-Direction   : Right (>>)
-Orig Value  : 15461291
-New Value   : 0
-Result Block: [ 00000000 ] [ 00000000 ] [ 00000000 ] [ 00000000 ]
-
-======================================================
-
-```
-* help interface
-```
-Usage: shift "[op] <type> <value>"
-
-Options:
-  -h, --help    Show this highly optimized help screen.
-
-Operations:
-  <<            Left Shift
-  >>            Right Shift
-  -n            Bitwise AND
-  -o            Bitwise OR
-  -x            Bitwise XOR
-  ~             Bitwise NOT
-
-Data Types:
-  u8, i8, u16, i16, u32, i32
-
-Examples:
-  shift "<< 2 u32 100"   Left shift 100 by 2 as a u32.
-  shift ">> 3 i8 100"    Right shift 100 by 3 as an i8.
-  shift "~ u32 (10+20)"  Compound expressions and bitwise NOT.
-======================================================
-
-```
-
-## Makefile
-* To build the tool
-```
-make
-
-# windows
-
-make windows
-
-# clean
-make clean
-
-# I know it's very basic :)
-```
-
-# Download
-
-#### Command Download 
-> * **Note:** You can fetch older releases by modifying the version tag (e.g., v1.1.0) directly in the download link.
-
-
-**Linux & Mac**
-
-* Run the following command to download and install `Ashift` globally:
-  `sudo curl -L -o /usr/local/bin/Ashift https://github.com/saa-999/Ashift/releases/download/v1.1.0/Ashift && sudo chmod +x /usr/local/bin/Ashift`
 
 **Windows (PowerShell):**
+```powershell
+Invoke-WebRequest -Uri "https://github.com/saa-999/Ashift/releases/download/v1.1.0/Ashift.exe" -OutFile "C:\Tools\Ashift.exe"
+# Remember to add C:\Tools to your PATH
+```
 
-* Assuming you have a `C:\Tools` directory added to your System PATH:
-`Invoke-WebRequest -Uri "https://github.com/saa-999/Ashift/releases/download/v1.1.0/Ashift.exe" -OutFile "C:\Tools\Ashift.exe"`
-* The tool will not work just anywhere in the Windows command line; you must execute the command within the environment variable:
-`[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Tools", "User")`
+You can also download manually from the [Releases page](https://github.com/saa-999/Ashift/releases).
 
-**Note: Modifying the System PATH is left optional to respect the user's custom environment configurations.**
+### Build from Source
 
-*NOTE: If you have done all this and it still doesn't work, close the terminal and restart it.*
+Ashift is written in C11 and optimized for performance.
 
-### Manual Download 
-**You can click on the "Tag" icon, select the latest version of the tool, and then choose the option corresponding to your operating system**
-***You can manually download the latest binaries directly from the [Releases Page](https://github.com/saa-999/Ashift/releases).***
+```bash
+git clone https://github.com/saa-999/Ashift.git
+cd Ashift
+```
 
-## About tool
+**Build for Linux/macOS:**
+```bash
+make
+```
 
-* Some might consider the idea naive, but I designed this tool to serve my own specific needs. I decided to share it because someone else might be looking for the exact same thing. If the tool doesn't appeal to you, feel free to modify it—or just throw it in the trash(:
+**Cross-compile for Windows (requires mingw-w64):**
+```bash
+make windows
+```
 
+To clean build artifacts:
+```bash
+make clean
+```
 
+## Usage
 
-* I used AI to speed up the tool's development after all, who wants to spend a busy day building a tool like this from scratch? However, I reviewed the code myself, and AI wrote 40% of it. My apologies to the LLM haters.
+Ashift requires arguments to be passed as a single quoted string to prevent your shell from interpreting characters like `<<`, `>>`, or `&`. 
 
-* I am not competing with other tools like qalc or bc; in fact, I rely on them myself. I designed shift to be faster and easier to use for repetitive tasks. While it is true that the Python interpreter performs the same function as my tool, consider the effort involved if you were to keep typing out commands like python -c "print(bin(192 << 24))". It is a somewhat slow process. 
+**Basic syntax:** `Ashift "[op] [arg] <type> <value>"` or `Ashift "<type> <expression>"`
+
+### Examples
+
+```bash
+# Shift operations
+Ashift "<< 2 u32 100"          # Left shift 100 by 2 as u32
+Ashift ">> 3 i8 100"           # Right shift 100 by 3 as i8
+
+# Bitwise operations (Hex input supported)
+Ashift "-x 0xFF u32 15461291"  # XOR
+Ashift "-o 0xFF u32 15461291"  # OR
+Ashift "-n 0xFF u32 15461291"  # AND
+
+# Expressions (v1.1.0+)
+Ashift "~ u32 (10+20)"         # Bitwise NOT with compound expression
+Ashift " i32 ((4094 + 16 - 1) & ~(16 - 1))"  # Memory alignment math
+
+# Help
+Ashift -h
+```
+
+### Multi-instruction Chaining
+You can chain multiple instructions using `&` as a separator within the quotes.
+
+## Data Types
+
+Ashift supports the following explicit data types:
+
+| Type | Description |
+|---|---|
+| `u8` | Unsigned 8-bit integer |
+| `i8` | Signed 8-bit integer |
+| `u16` | Unsigned 16-bit integer |
+| `i16` | Signed 16-bit integer |
+| `u32` | Unsigned 32-bit integer |
+| `i32` | Signed 32-bit integer |
+
+## Contributing
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute.
+
+## License
+Ashift is licensed under the [MIT License](LICENSE). Copyright (c) 2026 srdv.
