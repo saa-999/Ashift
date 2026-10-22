@@ -3,14 +3,14 @@
 #define SKIP_WHITESPACE(ptr) while (*(ptr) == ' ' || *(ptr) == '\t') { (ptr)++; }
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 
-static uint32_t parse_expr(const char32_t **stream);
+static uint64_t parse_expr(const char32_t **stream);
 
-static uint32_t parse_primary(const char32_t **stream) {
+static uint64_t parse_primary(const char32_t **stream) {
     const char32_t *ptr = *stream;
     SKIP_WHITESPACE(ptr);
     if (*ptr == '(') {
         ptr++;
-        uint32_t val = parse_expr(&ptr);
+        uint64_t val = parse_expr(&ptr);
         SKIP_WHITESPACE(ptr);
         if (*ptr == ')') {
             ptr++;
@@ -19,7 +19,7 @@ static uint32_t parse_primary(const char32_t **stream) {
         return val;
     }
     
-    uint32_t val = 0;
+    uint64_t val = 0;
     int has_digits = 0;
     if (ptr[0] == '0' && (ptr[1] == 'x' || ptr[1] == 'X')) {
         ptr += 2;
@@ -52,13 +52,13 @@ static uint32_t parse_primary(const char32_t **stream) {
     return val;
 }
 
-static uint32_t parse_unary(const char32_t **stream) {
+static uint64_t parse_unary(const char32_t **stream) {
     const char32_t *save = *stream;
     SKIP_WHITESPACE(save);
     if (*save == '+') {
         save++;
         const char32_t *next = save;
-        uint32_t val = parse_unary(&next);
+        uint64_t val = parse_unary(&next);
         if (next != save) {
             *stream = next;
             return val;
@@ -66,7 +66,7 @@ static uint32_t parse_unary(const char32_t **stream) {
     } else if (*save == '-') {
         save++;
         const char32_t *next = save;
-        uint32_t val = parse_unary(&next);
+        uint64_t val = parse_unary(&next);
         if (next != save) {
             *stream = next;
             return -val;
@@ -74,7 +74,7 @@ static uint32_t parse_unary(const char32_t **stream) {
     } else if (*save == '~') {
         save++;
         const char32_t *next = save;
-        uint32_t val = parse_unary(&next);
+        uint64_t val = parse_unary(&next);
         if (next != save) {
             *stream = next;
             return ~val;
@@ -83,8 +83,8 @@ static uint32_t parse_unary(const char32_t **stream) {
     return parse_primary(stream);
 }
 
-static uint32_t parse_mul(const char32_t **stream) {
-    uint32_t val = parse_unary(stream);
+static uint64_t parse_mul(const char32_t **stream) {
+    uint64_t val = parse_unary(stream);
     while (1) {
         const char32_t *save = *stream;
         SKIP_WHITESPACE(save);
@@ -92,7 +92,7 @@ static uint32_t parse_mul(const char32_t **stream) {
             char32_t op = *save;
             save++;
             const char32_t *next = save;
-            uint32_t rhs = parse_unary(&next);
+            uint64_t rhs = parse_unary(&next);
             if (next != save) {
                 if (op == '*') val *= rhs;
                 else if (op == '/') { if (rhs != 0) val /= rhs; }
@@ -106,8 +106,8 @@ static uint32_t parse_mul(const char32_t **stream) {
     return val;
 }
 
-static uint32_t parse_add(const char32_t **stream) {
-    uint32_t val = parse_mul(stream);
+static uint64_t parse_add(const char32_t **stream) {
+    uint64_t val = parse_mul(stream);
     while (1) {
         const char32_t *save = *stream;
         SKIP_WHITESPACE(save);
@@ -115,7 +115,7 @@ static uint32_t parse_add(const char32_t **stream) {
             char32_t op = *save;
             save++;
             const char32_t *next = save;
-            uint32_t rhs = parse_mul(&next);
+            uint64_t rhs = parse_mul(&next);
             if (next != save) {
                 if (op == '+') val += rhs;
                 else val -= rhs;
@@ -128,8 +128,8 @@ static uint32_t parse_add(const char32_t **stream) {
     return val;
 }
 
-static uint32_t parse_shift(const char32_t **stream) {
-    uint32_t val = parse_add(stream);
+static uint64_t parse_shift(const char32_t **stream) {
+    uint64_t val = parse_add(stream);
     while (1) {
         const char32_t *save = *stream;
         SKIP_WHITESPACE(save);
@@ -137,7 +137,7 @@ static uint32_t parse_shift(const char32_t **stream) {
             char32_t op = save[0];
             save += 2;
             const char32_t *next = save;
-            uint32_t rhs = parse_add(&next);
+            uint64_t rhs = parse_add(&next);
             if (next != save) {
                 if (op == '<') val <<= rhs;
                 else val >>= rhs;
@@ -150,15 +150,15 @@ static uint32_t parse_shift(const char32_t **stream) {
     return val;
 }
 
-static uint32_t parse_bitwise_and(const char32_t **stream) {
-    uint32_t val = parse_shift(stream);
+static uint64_t parse_bitwise_and(const char32_t **stream) {
+    uint64_t val = parse_shift(stream);
     while (1) {
         const char32_t *save = *stream;
         SKIP_WHITESPACE(save);
         if (*save == '&') {
             save++;
             const char32_t *next = save;
-            uint32_t rhs = parse_shift(&next);
+            uint64_t rhs = parse_shift(&next);
             if (next != save) {
                 val &= rhs;
                 *stream = next;
@@ -170,15 +170,15 @@ static uint32_t parse_bitwise_and(const char32_t **stream) {
     return val;
 }
 
-static uint32_t parse_bitwise_xor(const char32_t **stream) {
-    uint32_t val = parse_bitwise_and(stream);
+static uint64_t parse_bitwise_xor(const char32_t **stream) {
+    uint64_t val = parse_bitwise_and(stream);
     while (1) {
         const char32_t *save = *stream;
         SKIP_WHITESPACE(save);
         if (*save == '^') {
             save++;
             const char32_t *next = save;
-            uint32_t rhs = parse_bitwise_and(&next);
+            uint64_t rhs = parse_bitwise_and(&next);
             if (next != save) {
                 val ^= rhs;
                 *stream = next;
@@ -190,15 +190,15 @@ static uint32_t parse_bitwise_xor(const char32_t **stream) {
     return val;
 }
 
-static uint32_t parse_bitwise_or(const char32_t **stream) {
-    uint32_t val = parse_bitwise_xor(stream);
+static uint64_t parse_bitwise_or(const char32_t **stream) {
+    uint64_t val = parse_bitwise_xor(stream);
     while (1) {
         const char32_t *save = *stream;
         SKIP_WHITESPACE(save);
         if (*save == '|') {
             save++;
             const char32_t *next = save;
-            uint32_t rhs = parse_bitwise_xor(&next);
+            uint64_t rhs = parse_bitwise_xor(&next);
             if (next != save) {
                 val |= rhs;
                 *stream = next;
@@ -210,7 +210,7 @@ static uint32_t parse_bitwise_or(const char32_t **stream) {
     return val;
 }
 
-static uint32_t parse_expr(const char32_t **stream) {
+static uint64_t parse_expr(const char32_t **stream) {
     return parse_bitwise_or(stream);
 }
 
@@ -220,7 +220,11 @@ static FORCE_INLINE int8_t parse_type_descriptor(const char32_t **stream) {
     int8_t type_flag = 0;
 
     if (ptr[0] == 'u') {
-        if (ptr[1] == '3' && ptr[2] == '2') {
+        if (ptr[1] == '6' && ptr[2] == '4') {
+        type_flag = SHIFT_TYPE_U64;
+        ptr += 3;
+        }
+        else if (ptr[1] == '3' && ptr[2] == '2') {
         type_flag = SHIFT_TYPE_U32;
         ptr += 3;
         }
@@ -233,7 +237,11 @@ static FORCE_INLINE int8_t parse_type_descriptor(const char32_t **stream) {
         }
     }
     else if (ptr[0] == 'i') {
-        if (ptr[1] == '3' && ptr[2] == '2') {
+        if (ptr[1] == '6' && ptr[2] == '4') {
+        type_flag = SHIFT_TYPE_I64;
+        ptr += 3;
+        }
+        else if (ptr[1] == '3' && ptr[2] == '2') {
         type_flag = SHIFT_TYPE_I32;
         ptr += 3;
         }
@@ -322,7 +330,7 @@ int32_t shift_parse_pipeline(shift_ctx_t *ctx) {
         uint8_t opcode = parse_opcode(&cursor);
 
         SKIP_WHITESPACE(cursor);
-        uint32_t op_arg = parse_expr(&cursor);
+        uint64_t op_arg = parse_expr(&cursor);
 
         SKIP_WHITESPACE(cursor);
 
@@ -331,7 +339,7 @@ int32_t shift_parse_pipeline(shift_ctx_t *ctx) {
 
         SKIP_WHITESPACE(cursor);
 
-        uint32_t raw_val = parse_expr(&cursor);
+        uint64_t raw_val = parse_expr(&cursor);
 
         shift_node_t *node = alloc_pipeline_node(ctx->pipeline);
         if (node == NULL) return -2;
@@ -344,10 +352,12 @@ int32_t shift_parse_pipeline(shift_ctx_t *ctx) {
         switch (data_type) {
             case SHIFT_TYPE_U8:  node->target_val.u8  = (uint8_t)raw_val;  break;
             case SHIFT_TYPE_U16: node->target_val.u16 = (uint16_t)raw_val; break;
-            case SHIFT_TYPE_U32: node->target_val.u32 = raw_val;           break;
+            case SHIFT_TYPE_U32: node->target_val.u32 = (uint32_t)raw_val; break;
+            case SHIFT_TYPE_U64: node->target_val.u64 = raw_val;           break;
             case SHIFT_TYPE_I8:  node->target_val.i8  = (int8_t)raw_val;   break;
             case SHIFT_TYPE_I16: node->target_val.i16 = (int16_t)raw_val;  break;
             case SHIFT_TYPE_I32: node->target_val.i32 = (int32_t)raw_val;  break;
+            case SHIFT_TYPE_I64: node->target_val.i64 = (int64_t)raw_val;  break;
         }
 
         append_pipeline_node(ctx->pipeline, node);

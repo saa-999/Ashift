@@ -16,12 +16,12 @@ static FORCE_INLINE void print_str(const char *str) {
     }
 }
 
-static FORCE_INLINE void print_u32(uint32_t val) {
+static FORCE_INLINE void print_u64(uint64_t val) {
     if (val == 0) {
         putchar('0');
         return;
     }
-    char buf[12];
+    char buf[21];
     int idx = 0;
     while (val > 0) {
         buf[idx++] = '0' + (val % 10);
@@ -32,7 +32,7 @@ static FORCE_INLINE void print_u32(uint32_t val) {
     }
 }
 
-static FORCE_INLINE void print_binary_blocks(uint32_t val, int8_t type_size) {
+static FORCE_INLINE void print_binary_blocks(uint64_t val, int8_t type_size) {
     uint8_t bits = (type_size < 0) ? -type_size : type_size;
     for (int i = bits - 1; i >= 0; i--) {
         if ((i & 7) == 7) {
@@ -46,7 +46,7 @@ static FORCE_INLINE void print_binary_blocks(uint32_t val, int8_t type_size) {
     putchar('\n');
 }
 
-static FORCE_INLINE uint32_t get_raw_value(shift_node_t *node, int8_t data_type) {
+static FORCE_INLINE uint64_t get_raw_value(shift_node_t *node, int8_t data_type) {
     switch (data_type) {
         case SHIFT_TYPE_U8:  return node->target_val.u8;
         case SHIFT_TYPE_I8:  return (uint8_t)node->target_val.i8;
@@ -54,6 +54,8 @@ static FORCE_INLINE uint32_t get_raw_value(shift_node_t *node, int8_t data_type)
         case SHIFT_TYPE_I16: return (uint16_t)node->target_val.i16;
         case SHIFT_TYPE_U32: return node->target_val.u32;
         case SHIFT_TYPE_I32: return (uint32_t)node->target_val.i32;
+        case SHIFT_TYPE_U64: return node->target_val.u64;
+        case SHIFT_TYPE_I64: return (uint64_t)node->target_val.i64;
         default: return 0;
     }
 }
@@ -66,6 +68,8 @@ static FORCE_INLINE void print_type_name(int8_t type_size) {
         case SHIFT_TYPE_I16: print_str("i16"); break;
         case SHIFT_TYPE_U32: print_str("u32"); break;
         case SHIFT_TYPE_I32: print_str("i32"); break;
+        case SHIFT_TYPE_U64: print_str("u64"); break;
+        case SHIFT_TYPE_I64: print_str("i64"); break;
         default: print_str("UNK"); break;
     }
 }
@@ -83,7 +87,7 @@ static void print_help() {
     print_str("  -x            Bitwise XOR\n");
     print_str("  ~             Bitwise NOT\n\n");
     print_str("Data Types:\n");
-    print_str("  u8, i8, u16, i16, u32, i32\n\n");
+    print_str("  u8, i8, u16, i16, u32, i32, u64, i64\n\n");
     print_str("Examples:\n");
     print_str("  shift \"<< 2 u32 100\"   Left shift 100 by 2 as a u32.\n");
     print_str("  shift \">> 3 i8 100\"    Right shift 100 by 3 as an i8.\n");
@@ -150,7 +154,7 @@ int main(int argc, char *argv[]) {
 
     while (current != NULL) {
         if (UNLIKELY(!(current->flags & FLAG_VALID))) break;
-        print_str("\n[ Instruction "); print_u32(instruction_count++); print_str(" ]\n");
+        print_str("\n[ Instruction "); print_u64(instruction_count++); print_str(" ]\n");
         
         int8_t data_type = extract_type(current->flags);
         uint8_t opcode = extract_opcode(current->flags);
@@ -159,20 +163,20 @@ int main(int argc, char *argv[]) {
         print_type_name(data_type);
         print_str("\n");
 
-        uint32_t raw_val = get_raw_value(current, data_type);
+        uint64_t raw_val = get_raw_value(current, data_type);
 
         if (UNLIKELY(opcode == SHIFT_OP_NONE)) {
             print_str("Mode        : [ DISPLAY ONLY ]\n");
-            print_str("Value       : "); print_u32(raw_val); print_str("\n");
+            print_str("Value       : "); print_u64(raw_val); print_str("\n");
             print_str("Mem Block   : "); print_binary_blocks(raw_val, data_type);
         } else {
-            print_str("Mode        : [ OPERATION DETECTED: "); print_u32(opcode); print_str(" ]\n");
-            print_str("Value (Raw) : "); print_u32(raw_val); print_str("\n");
-            print_str("Target Arg  : "); print_u32(current->op_arg); print_str("\n");
+            print_str("Mode        : [ OPERATION DETECTED: "); print_u64(opcode); print_str(" ]\n");
+            print_str("Value (Raw) : "); print_u64(raw_val); print_str("\n");
+            print_str("Target Arg  : "); print_u64(current->op_arg); print_str("\n");
             print_str("Base Block  : "); print_binary_blocks(raw_val, data_type);
             
             if (LIKELY(opcode != SHIFT_OP_NONE)) {
-                uint32_t shifted_val = 0;
+                uint64_t shifted_val = 0;
                 
                 if (opcode == SHIFT_OP_LSHIFT) {
                     print_str("Direction   : Left (<<)\n");
@@ -183,9 +187,11 @@ int main(int argc, char *argv[]) {
                         case SHIFT_TYPE_I8:  shifted_val = (uint8_t)((int8_t)raw_val >> current->op_arg); break;
                         case SHIFT_TYPE_I16: shifted_val = (uint16_t)((int16_t)raw_val >> current->op_arg); break;
                         case SHIFT_TYPE_I32: shifted_val = (uint32_t)((int32_t)raw_val >> current->op_arg); break;
+                        case SHIFT_TYPE_I64: shifted_val = (uint64_t)((int64_t)raw_val >> current->op_arg); break;
                         case SHIFT_TYPE_U8:  shifted_val = (uint8_t)((uint8_t)raw_val >> current->op_arg); break;
                         case SHIFT_TYPE_U16: shifted_val = (uint16_t)((uint16_t)raw_val >> current->op_arg); break;
                         case SHIFT_TYPE_U32: shifted_val = (uint32_t)raw_val >> current->op_arg; break;
+                        case SHIFT_TYPE_U64: shifted_val = raw_val >> current->op_arg; break;
                         default: shifted_val = raw_val >> current->op_arg; break;
                     }
                 } else if (opcode == SHIFT_OP_NOT) {
@@ -203,12 +209,12 @@ int main(int argc, char *argv[]) {
                 }
                 
                 uint8_t bits = (data_type < 0) ? -data_type : data_type;
-                if (bits < 32) {
-                    shifted_val &= ((1U << bits) - 1);
+                if (bits < 64) {
+                    shifted_val &= ((1ULL << bits) - 1);
                 }
                 
-                print_str("Orig Value  : "); print_u32(raw_val); print_str("\n");
-                print_str("New Value   : "); print_u32(shifted_val); print_str("\n");
+                print_str("Orig Value  : "); print_u64(raw_val); print_str("\n");
+                print_str("New Value   : "); print_u64(shifted_val); print_str("\n");
                 print_str("Result Block: "); print_binary_blocks(shifted_val, data_type);
             }
         }

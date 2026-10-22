@@ -30,9 +30,11 @@
 #define SHIFT_TYPE_U8    8
 #define SHIFT_TYPE_U16   16
 #define SHIFT_TYPE_U32   32
+#define SHIFT_TYPE_U64   64
 #define SHIFT_TYPE_I8   -8
 #define SHIFT_TYPE_I16  -16
 #define SHIFT_TYPE_I32  -32
+#define SHIFT_TYPE_I64  -64
 
 #define FLAG_OPCODE_MASK 0x000000FF
 #define FLAG_TYPE_MASK   0x0000FF00
@@ -43,14 +45,16 @@ typedef union {
     uint8_t  u8;
     uint16_t u16;
     uint32_t u32;
+    uint64_t u64;
     int8_t   i8;
     int16_t  i16;
     int32_t  i32;
+    int64_t  i64;
 } shift_val_t;
 
 typedef struct shift_node {
     uint32_t            flags; // Tracks operational flags and internal state
-    uint32_t            op_arg;
+    uint64_t            op_arg;
     shift_val_t         target_val;
     struct shift_node   *next;
 } shift_node_t;

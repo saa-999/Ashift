@@ -19,17 +19,17 @@ I built Ashift for my own workflow because I needed a fast way to handle repetit
 
 ## Install
 
-### Download Pre-compiled Binaries (v1.1.0)
+### Download Pre-compiled Binaries (v1.2.0)
 
 **Linux & macOS:**
 ```bash
-sudo curl -L -o /usr/local/bin/Ashift https://github.com/saa-999/Ashift/releases/download/v1.1.0/Ashift
+sudo curl -L -o /usr/local/bin/Ashift https://github.com/saa-999/Ashift/releases/download/v1.2.0/Ashift
 sudo chmod +x /usr/local/bin/Ashift
 ```
 
 **Windows (PowerShell):**
 ```powershell
-Invoke-WebRequest -Uri "https://github.com/saa-999/Ashift/releases/download/v1.1.0/Ashift.exe" -OutFile "C:\Tools\Ashift.exe"
+Invoke-WebRequest -Uri "https://github.com/saa-999/Ashift/releases/download/v1.2.0/Ashift.exe" -OutFile "C:\Tools\Ashift.exe"
 # Remember to add C:\Tools to your PATH
 ```
 
@@ -81,6 +81,10 @@ Ashift "-n 0xFF u32 15461291"  # AND
 Ashift "~ u32 (10+20)"         # Bitwise NOT with compound expression
 Ashift " i32 ((4094 + 16 - 1) & ~(16 - 1))"  # Memory alignment math
 
+# 64-bit types (v1.2.0+)
+Ashift "<< 40 u64 1"           # Left shift 1 by 40 as u64
+Ashift ">> 4 i64 -256"         # Arithmetic right shift as i64
+
 # Help
 Ashift -h
 ```
@@ -100,6 +104,8 @@ Ashift supports the following explicit data types:
 | `i16` | Signed 16-bit integer |
 | `u32` | Unsigned 32-bit integer |
 | `i32` | Signed 32-bit integer |
+| `u64` | Unsigned 64-bit integer |
+| `i64` | Signed 64-bit integer |
 
 ## Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute.
